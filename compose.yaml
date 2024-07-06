@@ -1,28 +1,7 @@
-version: '3.8'
-name: template01
+# version: '3.8'
+name: shaqas_ai_mart
 services:
-  api:
-    build:
-      context: ./todo
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ./todo:/code  # Sync local development directory with the container
-    depends_on:
-        - postgres_db
-        - broker
-    ports:
-      - "8000:8000"  # Expose container port 8000 to host port 8000  
-  api2:
-    build:
-      context: ./microservice_02
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ./microservice_02:/code  # Sync local development directory with the container
-    depends_on:
-        - postgres_db
-        - broker
-    ports:
-      - "8002:8000"  # Expose container port 8000 to host port 8000  
+  #########PRODUCT SERVICE################## 
   product-service:
     build:
       context: ./product-service
@@ -33,32 +12,146 @@ services:
         - postgres_product_db
         - broker
     ports:
-      - "8010:8000"  # Expose container port 8000 to host port 8000  
-  postgres_db:
-    image: postgres:latest  # Use the official PostgreSQL image
-    restart: always
-    container_name: PostgresCont
-    environment:
-        - POSTGRES_USER=ziakhan
-        - POSTGRES_PASSWORD=my_password
-        - POSTGRES_DB=mydatabase
-    ports:
-        - '5433:5432'
+      - "8010:8000"  # Expose container port 8000 to host port 8010  
+  ########INVENTORY SERVICE#################
+  # inventory-service:
+  #   build:
+  #     context: ./inventory-service
+  #     dockerfile: Dockerfile.dev
+  #   volumes:
+  #     - ./inventory-service:/code  # Sync local development directory with the container
+  #   depends_on:
+  #       - postgres_inventory_db
+  #       - broker
+  #   ports:
+  #     - "8011:8000"  # Expose container port 8000 to host port 8011 
+  ########ORDER SERVICE#################
+  order-service:
+    build:
+      context: ./order-service
+      dockerfile: Dockerfile.dev
     volumes:
-        - postgres_db:/var/lib/postgresql/data
-
+      - ./order-service:/code  # Sync local development directory with the container
+    depends_on:
+        - postgres_order_db
+        - broker
+    ports:
+      - "8012:8000"  # Expose container port 8000 to host port 8012 
+  ########NOTIFICATION SERVICE#################
+  # notification-service:
+  #   build:
+  #     context: ./notification-service
+  #     dockerfile: Dockerfile.dev
+  #   volumes:
+  #     - ./notification-service:/code  # Sync local development directory with the container
+  #   depends_on:
+  #       - postgres_notification_db
+  #       - broker
+  #   ports:
+  #     - "8013:8000"  # Expose container port 8000 to host port 8013
+  ########PAYMENT SERVICE#################
+  # payment-service:
+  #   build:
+  #     context: ./payment-service
+  #     dockerfile: Dockerfile.dev
+  #   volumes:
+  #     - ./payment-service:/code  # Sync local development directory with the container
+  #   depends_on:
+  #       - postgres_payment_db
+  #       - broker
+  #   ports:
+  #     - "8014:8000"  # Expose container port 8000 to host port 8014
+ ########USER SERVICE#################
+  # user-service:
+  #   build:
+  #     context: ./user-service
+  #     dockerfile: Dockerfile.dev
+  #   volumes:
+  #     - ./user-service:/code  # Sync local development directory with the container
+  #   depends_on:
+  #       - postgres_user_db
+  #       - broker
+  #   ports:
+  #     - "8015:8000"  # Expose container port 8000 to host port 8015
+ ############PRODUCT DB################
   postgres_product_db:
     image: postgres:latest  # Use the official PostgreSQL image
     restart: always
     container_name: PostgresProductCont
     environment:
-        - POSTGRES_USER=ziakhan
+        - POSTGRES_USER=shaqas
         - POSTGRES_PASSWORD=my_password
         - POSTGRES_DB=mydatabase
     ports:
         - '5481:5432'
     volumes:
         - postgres_product_db:/var/lib/postgresql/data
+############INVENTORY DB################
+  # postgres_inventory_db:
+  #   image: postgres:latest  # Use the official PostgreSQL image
+  #   restart: always
+  #   container_name: PostgresInventoryCont
+  #   environment:
+  #       - POSTGRES_USER=shaqas
+  #       - POSTGRES_PASSWORD=my_password
+  #       - POSTGRES_DB=mydatabase
+  #   ports:
+  #       - '5482:5432'
+  #   volumes:
+  #       - postgres_inventory_db:/var/lib/postgresql/data
+############ORDER DB################
+  postgres_order_db:
+    image: postgres:latest  # Use the official PostgreSQL image
+    restart: always
+    container_name: PostgresOrderCont
+    environment:
+        - POSTGRES_USER=shaqas
+        - POSTGRES_PASSWORD=my_password
+        - POSTGRES_DB=mydatabase
+    ports:
+        - '5483:5432'
+    volumes:
+        - postgres_order_db:/var/lib/postgresql/data
+############NOTIFICATION DB################
+  # postgres_notification_db:
+  #   image: postgres:latest  # Use the official PostgreSQL image
+  #   restart: always
+  #   container_name: PostgresNotificationCont
+  #   environment:
+  #       - POSTGRES_USER=shaqas
+  #       - POSTGRES_PASSWORD=my_password
+  #       - POSTGRES_DB=mydatabase
+  #   ports:
+  #       - '5484:5432'
+  #   volumes:
+  #       - postgres_notification_db:/var/lib/postgresql/data
+############PAYMENT DB################
+  # postgres_payment_db:
+  #   image: postgres:latest  # Use the official PostgreSQL image
+  #   restart: always
+  #   container_name: PostgresPaymentCont
+  #   environment:
+  #       - POSTGRES_USER=shaqas
+  #       - POSTGRES_PASSWORD=my_password
+  #       - POSTGRES_DB=mydatabase
+  #   ports:
+  #       - '5485:5432'
+  #   volumes:
+  #       - postgres_payment_db:/var/lib/postgresql/data
+############USER DB################
+  # postgres_user_db:
+  #   image: postgres:latest  # Use the official PostgreSQL image
+  #   restart: always
+  #   container_name: PostgresUserCont
+  #   environment:
+  #       - POSTGRES_USER=shaqas
+  #       - POSTGRES_PASSWORD=my_password
+  #       - POSTGRES_DB=mydatabase
+  #   ports:
+  #       - '5486:5432'
+  #   volumes:
+  #       - postgres_user_db:/var/lib/postgresql/data
+############KAFKA BROKER################
   broker:
     image: apache/kafka:3.7.0
     hostname: broker
@@ -80,7 +173,7 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_LOG_DIRS: '/tmp/kraft-combined-logs'
-
+############KAFKA UI################
   kafka-ui:
     image: provectuslabs/kafka-ui
     container_name: kafka-ui
@@ -92,12 +185,21 @@ services:
       DYNAMIC_CONFIG_ENABLED: "true"
     depends_on:
       - broker
+###########VOLUMES#################
 volumes:
-  postgres_db:
-    driver: local
   postgres_product_db:
     driver: local
-
+  postgres_inventory_db:
+    driver: local
+  postgres_order_db:
+    driver: local
+  # postgres_notification_db:
+  #   driver: local
+  # postgres_payment_db:
+  #   driver: local
+  # postgres_user_db:
+  #   driver: local
+###########NETWORKS#################
 networks:
   default:
     driver: bridge
