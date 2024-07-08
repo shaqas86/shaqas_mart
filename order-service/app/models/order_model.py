@@ -12,6 +12,18 @@ class OrderItem(SQLModel, table=True):
     user_email:str
     user_name:str
     product_name:str
+
+
+class OrderItemUpdate(SQLModel):
+       
+    order_item_id: int|None 
+    product_id: int
+    quantity: int
+    unit_price: float
+    user_id: int
+    user_email:str
+    user_name:str
+    product_name:str
     
 # class Order(SQLModel, table=True):
        

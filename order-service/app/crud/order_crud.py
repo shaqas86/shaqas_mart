@@ -1,6 +1,6 @@
 from fastapi import HTTPException
 from sqlmodel import Session,select
-from app.models.order_model import OrderItem
+from app.models.order_model import OrderItem, OrderItemUpdate
 
 # Add a New Order to the Database
 def add_new_order(order_data: OrderItem, session: Session):
@@ -33,17 +33,17 @@ def delete_order_by_id(order_item_id:int , session:Session):
     return{"message": "Order Deleted Successfully"}
 
 # Update Order by ID
-# def update_order_by_id(order_id:int, session:Session):
-#     #Step:1 Get the Product by ID
-#     product=session.exec(select(Product).where(Product.id== product_id)).one_or_none()
-#     if product is None:
-#         raise HTTPException(status_code=404, detail="Product not found")
-#     #update the product
-#     product_data = to_update_product_data.model_dump(exclude_unset=True)
-#     product.sqlmodel_update(product_data)
-#     session.add(product)
-#     session.commit()
-#     return product
+def update_order_by_id(order_id:int,to_update_order_data:OrderItemUpdate,session:Session):
+    #Step:1 Get the order by ID
+    order=session.exec(select(OrderItem).where(OrderItem.order_item_id== order_id)).one_or_none()
+    if order is None:
+        raise HTTPException(status_code=404, detail="Order not found")
+    #update the order
+    order_data = to_update_order_data.model_dump(exclude_unset=True)
+    order.sqlmodel_update(order_data)
+    session.add(order)
+    session.commit()
+    return order
 # Validate Product by ID
 def validate_order_by_id(order_id: int, session: Session) -> OrderItem | None:
     order = session.exec(select(OrderItem).where(OrderItem.order_item_id == order_id)).one_or_none()

@@ -4,7 +4,6 @@ from app.models.product_model import Product, ProductUpdate
 from app.crud.product_crud import validate_product_by_id
 from app.deps import get_session, get_kafka_producer
 
-
 async def consume_inventory_messages(topic, bootstrap_servers):
     # Create a consumer instance.
     consumer = AIOKafkaConsumer(

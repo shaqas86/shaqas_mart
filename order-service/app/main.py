@@ -12,8 +12,8 @@ import json
 from app import order_settings
 from app.order_settings import KAFKA_ORDER_TOPIC,BOOTSTRAP_SERVER
 from app.db_engine import engine
-from app.models.order_model import OrderItem
-from app.crud.order_crud import add_new_order, get_all_orders, get_order_by_id, delete_order_by_id
+from app.models.order_model import OrderItem,OrderItemUpdate
+from app.crud.order_crud import add_new_order, get_all_orders, get_order_by_id, delete_order_by_id,update_order_by_id
 from app.deps import get_session,get_kafka_producer
 from app.consumers.order_consumer import consume_order_messages
 
@@ -99,15 +99,15 @@ def delete_single_order(order_item_id: int, session: Annotated[Session, Depends(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
-# @app.patch("/manage-orders/{order_id}", response_model=Order)
-# def update_single_product(order_id: int, product: ProductUpdate, session: Annotated[Session, Depends(get_session)]):
-#     """ Update a single product by ID"""
-#     try:
-#         return update_product_by_id(product_id=product_id, to_update_product_data=product, session=session)
-#     except HTTPException as e:
-#         raise e
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=str(e))
+@app.patch("/manage-orders/{order_item_id}", response_model=OrderItem)
+def update_single_order(order_item_id: int, order_update: OrderItemUpdate, session: Annotated[Session, Depends(get_session)]):
+    """ Update a single order by ID"""
+    try:
+        return update_order_by_id(order_id=order_item_id, to_update_order_data=order_update, session=session)
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 # from contextlib import asynccontextmanager
 # from typing import Annotated
